@@ -1,0 +1,13 @@
+- hosts: localhost
+  gather_facts: no
+  vars:
+    scopes: 
+      - profile
+      - eduperson_scoped_affiliation
+      - voperson_external_affiliation
+      - email
+
+  tasks:
+    - debug:
+        msg: |
+          scope: {{ scopes }}
