@@ -22,12 +22,12 @@ public class MinioTest {
 
     @Test
     void testMinio() {
-        String imageUrl = uploadImageToMinio("squirl.jpg");
+        String imageUrl = uploadImageToMinio("squirl.jpg", true);
         System.out.println("Public Image URL: " + imageUrl);
     }
 
     @SneakyThrows
-    private String uploadImageToMinio(String resourceName) {
+    protected String uploadImageToMinio(String resourceName, boolean createPolicy) {
         MinioClient minioClient = MinioClient.builder()
                 .endpoint(MINIO_URL)
                 .credentials(ACCESS_KEY, SECRET_KEY)
@@ -36,13 +36,15 @@ public class MinioTest {
         boolean isBucketExists = minioClient.bucketExists(BucketExistsArgs.builder().bucket(BUCKET_NAME).build());
         if (!isBucketExists) {
             minioClient.makeBucket(MakeBucketArgs.builder().bucket(BUCKET_NAME).build());
+            if (createPolicy) {
+                // Make the uploaded image publicly accessible
+                minioClient.setBucketPolicy(SetBucketPolicyArgs.builder()
+                        .bucket(BUCKET_NAME)
+                        .config(getPublicBucketPolicy(BUCKET_NAME))
+                        .build()
+                );
 
-            // Make the uploaded image publicly accessible
-            minioClient.setBucketPolicy(SetBucketPolicyArgs.builder()
-                    .bucket(BUCKET_NAME)
-                    .config(getPublicBucketPolicy(BUCKET_NAME))
-                    .build()
-            );
+            }
         }
         InputStream inputStream = new ClassPathResource(resourceName).getInputStream();
         String uuid = UUID.randomUUID().toString();
