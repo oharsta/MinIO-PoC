@@ -13,16 +13,20 @@ import java.util.UUID;
 
 public class MinioTest {
 
-    private static final String MINIO_URL = "http://127.0.0.1:9000";
+//    private static final String MINIO_URL = "http://127.0.0.1:9000";
+//    private static final String ACCESS_KEY = "minioadmin";
+//    private static final String SECRET_KEY = "minioadmin";
+//    private static final String BUCKET_NAME = "images";
+    private static final String MINIO_URL = "https://minioapi.test2.surfconext.nl";
     private static final String ACCESS_KEY = "minioadmin";
-    private static final String SECRET_KEY = "minioadmin";
-    private static final String BUCKET_NAME = "images";
+    private static final String SECRET_KEY = "jippie123";
+    private static final String BUCKET_NAME = "images-surf-access-2";
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     void testMinio() {
-        String imageUrl = uploadImageToMinio("squirl.jpg", true);
+        String imageUrl = uploadImageToMinio("download.png", true);
         System.out.println("Public Image URL: " + imageUrl);
     }
 
